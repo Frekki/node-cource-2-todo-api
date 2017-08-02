@@ -15,6 +15,7 @@ var {
 } = require('./models/user');
 
 var app = express();
+const port = process.env.PORT || 4444;
 
 app.use(bodyParser.json());
 
