@@ -51,7 +51,7 @@ describe('POST /todos', () => {
       });
   });
 
-  it('shouldt not creat todo with invalid body date', (done) => {
+  it('should not creat todo with invalid body date', (done) => {
     request(app)
       .post('/todos')
       .send({})
@@ -148,7 +148,7 @@ describe('DELETE /todos/:id', () => {
   });
 });
 
-describe('Patch /todos/:id', () => {
+describe('PATCH /todos/:id', () => {
   it('should update the todo', (done) => {
     var hexId = todos[0]._id.toHexString();
     var text = 'This should be a new text';
@@ -310,6 +310,25 @@ describe('POST /users/login', () => {
         }
 
         User.findById(users[1]._id).then((user) => {
+          expect(user.tokens.length).toBe(0);
+          done();
+        }).catch((e) => done(e));
+      });
+  });
+});
+
+describe('DELETE /users/me/token', () => {
+  it('should remove off token on logout', (done) => {
+    request(app)
+      .delete('/users/me/token')
+      .set('x-auth', users[0].tokens[0].token)
+      .expect(200)
+      .end((err, res) => {
+        if (err) {
+          return done();
+        }
+
+        User.findById(users[0]._id).then((user) => {
           expect(user.tokens.length).toBe(0);
           done();
         }).catch((e) => done(e));
